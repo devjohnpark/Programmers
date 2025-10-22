@@ -1,16 +1,14 @@
 import java.util.*;
 
 class Solution {
-    private List<String> result = new ArrayList<>();
+    private final List<String> result = new ArrayList<>();
     
     // 이차원 배열에서 각 첫번째 요소를 출발점으로 순회시, 중복 탐색을 제거하기 위해 출발점 방문 마킹
     private boolean[] visited;
     
-    public String[] solution(String[][] tickets) {
-        visited = new boolean[tickets.length];
-        
+    public String[] solution(String[][] tickets) {        
         // 찾은 탐색 경로를 공항 이름과 공백을 붙여서 문자열로 만들어서 List<String>에 저장
-        dfs(0, "ICN", "ICN", tickets);
+        dfs(0, "ICN", "ICN", tickets, new boolean[tickets.length]);
         
         // 탐색 경로 문자열을 사전순 정렬
         Collections.sort(result);
@@ -34,7 +32,7 @@ class Solution {
     
     // 방문 표시 제거를 빼면 DFS는 단 하나의 경로만 탐색하고 끝나버리게 된다.
     // 모든 항공권을 한 번씩 사용하여 가능한 모든 여행 경로를 찾아야한다.
-    private void dfs(int depth, String start, String route, String[][] tickets) {
+    private void dfs(int depth, String start, String route, String[][] tickets, boolean[] visited) {
         if (tickets.length == depth) {
             result.add(route);
             return;
@@ -44,7 +42,7 @@ class Solution {
         for (int i = 0; i < tickets.length; i++) {
             if (tickets[i][0].equals(start) && !visited[i]) {
                 visited[i] = true;
-                dfs(depth + 1, tickets[i][1], route + " " + tickets[i][1], tickets);
+                dfs(depth + 1, tickets[i][1], route + " " + tickets[i][1], tickets, visited);
                 visited[i] = false;
             }
         }
