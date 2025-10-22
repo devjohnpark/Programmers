@@ -1,47 +1,53 @@
 import java.util.*;
 
 class Solution {
-    // 가능한 모든 여행 경로(문자열 형태)를 저장하는 리스트
-    private ArrayList<String> list = new ArrayList<>();
+    private List<String> result = new ArrayList<>();
     
-    // 각 티켓이 사용되었는지 여부를 체크하는 boolean 배열
-    // 그래프에서 인접한 노드를 이미 방문했는지 확인 필요
-    private boolean visited[];
-
+    // 이차원 배열에서 각 첫번째 요소를 출발점으로 순회시, 중복 탐색을 제거하기 위해 출발점 방문 마킹
+    private boolean[] visited;
+    
     public String[] solution(String[][] tickets) {
         visited = new boolean[tickets.length];
-
-        // 항상 "ICN" 공항에서 시작
+        
+        // 찾은 탐색 경로를 공항 이름과 공백을 붙여서 문자열로 만들어서 List<String>에 저장
         dfs(0, "ICN", "ICN", tickets);
-
-        // 가능한 모든 경로 중 사전순으로 가장 앞선 경로 선택
-        Collections.sort(list);
-
-        return list.get(0).split(" ");
+        
+        // 탐색 경로 문자열을 사전순 정렬
+        Collections.sort(result);
+        
+        // 가장 첫번째 문자열을 반환
+        String[] answer = result.get(0).split(" ");
+        return answer;
     }
-
-    // current: 현재 위치한 공항
-    // path: 지금까지의 경로 문자열 (공항들을 공백으로 이어 붙임)
-    // depth: 현재 사용한 티켓의 개수
-    private void dfs(int depth, String current, String path, String[][] tickets) {
-            // 모든 티켓을 사용했을 경우 -> 경로 완성
-        if (depth == tickets.length) {
-            list.add(path);
+    
+    // 티켓을 모두 사용할 경우, 탐색 경로 완성되므로 리스트에 추가
+    // int depth == tickets.length
+    
+    // 항공권이 연결되기 위해서는 두번째 요소와 첫번째 요소가 같아야한다.
+    // 따라서 재귀 메서드를 호출할때 두번째 요소를 매개변수로 전달한다. (매개변수명은 또 출발점이되므로 start로 지정)
+    // if(tickets[i][0].equal(start)) 일때만 재귀메서드 호출
+    
+    // 모든 출발점을 시작으로 경로 탐색
+    // 방문한 항공 방문 표시
+    // dfs 탐색
+    // 방문한 항공 방문 표시를 제거해서 부모 노드올라가 형제 노드로 탐색하게 한다. 
+    
+    // 방문 표시 제거를 빼면 DFS는 단 하나의 경로만 탐색하고 끝나버리게 된다.
+    // 모든 항공권을 한 번씩 사용하여 가능한 모든 여행 경로를 찾아야한다.
+    private void dfs(int depth, String start, String route, String[][] tickets) {
+        if (tickets.length == depth) {
+            result.add(route);
             return;
         }
-
-        for (int i = 0; i < visited.length; i++) {
-            // 아직 사용하지 않은 티켓 중에서, current에 현재 공항을 전달하여 다른 티켓중 출발지와 동일한지 확인
-            if (!visited[i] && current.equals(tickets[i][0])) {
-                // 티켓 사용 처리
-                visited[i] = true; 
-
-                // 다음 공항으로 이동하면서 경로 확장
-                dfs(depth + 1, tickets[i][1], path + " " + tickets[i][1], tickets); // JFK
-
-                // 티켓 미사용으로 되돌리기
-                visited[i] = false; 
+        
+        // 모든 출발점을 시작으로 경로 탐색
+        for (int i = 0; i < tickets.length; i++) {
+            if (tickets[i][0].equals(start) && !visited[i]) {
+                visited[i] = true;
+                dfs(depth + 1, tickets[i][1], route + " " + tickets[i][1], tickets);
+                visited[i] = false;
             }
         }
     }
 }
+
