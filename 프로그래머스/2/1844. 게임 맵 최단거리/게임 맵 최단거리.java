@@ -25,7 +25,7 @@ class Solution {
         // x, y, 거리의 합 저장
         Queue<int[]> q = new LinkedList<>();
         
-        q.add(new int[] { 0, 0, 1});
+        q.add(new int[] { 0, 0, 1}); // 초기값 1로 설정해야 n,m이 모두 1일때 1 반환
         
         maps[0][0] = 0; // 방문 마킹
         
