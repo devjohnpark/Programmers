@@ -44,7 +44,7 @@ class Solution {
                 int ny = y + dy[i];
                 if (nx >= 0 && nx < n && ny >= 0 && ny < m && maps[nx][ny] == 1) {
                     maps[nx][ny] = 0; // 방문 처리
-                    q.add(new int[]{nx, ny, d + 1}); // 시작점으로부터 현재 정점까지의 거리 저장
+                    q.add(new int[]{nx, ny, d + 1}); // 탐색한 거리 누적 저장
                 }
             }
             
