@@ -15,7 +15,6 @@ class Solution {
         boolean[] visited = new boolean[words.length];
         int[] min = new int[words.length];
         Queue<String> q = new LinkedList<>();
-        // String change = bigin;
         q.add(begin);
         int depth = 0;
         while (!q.isEmpty()) {
