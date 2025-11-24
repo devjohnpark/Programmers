@@ -13,11 +13,9 @@ class Solution {
     private int dx[] = { 1, -1, 0, 0};
     private int dy[] = { 0, 0, 1, -1};
     
-    
-    
     public int solution(int[][] rectangle, int characterX, int characterY, int itemX, int itemY) {
          // 인접행렬 생성
-         // x, y 좌표 50개이므로 2배수인 100개로 할당
+         // x, y 좌표가 1 ~ 50이고, 2배수면 1 ~ 100까지 인데스를 표현해야하므로 101개로 할당
          int[][] adjMatrix = new int[101][101]; // 초기값 0
          
          // 도형을 좌표에 옮기기
