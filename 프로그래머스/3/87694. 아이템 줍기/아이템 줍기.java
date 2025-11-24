@@ -17,6 +17,7 @@ class Solution {
          // 인접행렬 생성
          // x, y 좌표가 1 ~ 50이고, 2배수면 1 ~ 100까지 인데스를 표현해야하므로 101개로 할당
          int[][] adjMatrix = new int[101][101]; // 초기값 0
+         boolean[][] visited = new boolean[101][101]; // 초기값 0
          
          // 도형을 좌표에 옮기기
          for (int i = 0; i < rectangle.length; i++) {
@@ -53,8 +54,7 @@ class Solution {
          int startX = characterX * 2;
          int startY = characterY * 2;
          q.add(new int[] {startX, startY, 0});
-         
-         adjMatrix[startX][startY] = 0; // 방문 
+         visited[startX][startY] = false; // 방문 
          int targetX = itemX * 2;
          int targetY = itemY * 2;
         while (!q.isEmpty()) {
@@ -70,8 +70,8 @@ class Solution {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
                 // 1을 발견하면 인접한 정점이므로 큐에 추가
-                if (nx >= 0 && nx < adjMatrix.length && ny >= 0 && ny < adjMatrix[0].length && adjMatrix[nx][ny] == 1) {
-                    adjMatrix[nx][ny] = 0; // 방문 처리
+                if (nx >= 0 && nx < adjMatrix.length && ny >= 0 && ny < adjMatrix[0].length && adjMatrix[nx][ny] == 1 && !visited[nx][ny]) {
+                    visited[nx][ny] = true; // 방문 처리
                     q.add(new int[]{nx, ny, cnt + 1}); // 시작점으로부터 현재 정점까지의 거리 저장
                 }
             }
