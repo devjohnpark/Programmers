@@ -22,12 +22,8 @@ class Solution {
             // 정점은 1번 부터 시작하므로 0번 인덱스부터 시작하기 위해 1 감소
             int v1 = edge[i][0] - 1;
             int v2 = edge[i][1] - 1;
-            if (!adjList.get(v1).contains(v2)) {
-                adjList.get(v1).add(v2);    
-            }
-            if (!adjList.get(v2).contains(v1)) {
-                adjList.get(v2).add(v1);
-            }
+            adjList.get(v1).add(v2);    
+            adjList.get(v2).add(v1);
         }
         
         boolean visited[] = new boolean[n];
