@@ -53,8 +53,7 @@
 // 간선을 그래프로 변환 (인접 리스트로)
 // 최단거리 탐색으로 1번 노드에서 가장 멀리 떨어진 노드를 카운팅
 // 무가중치이므로 BFS 사용
-// 간선의 개수만큼의 거리 배열을 할당해서 정점별로 간선의 개수를 카운팅
-// 거리 배열을 끝 부분부터 순회해서 0보다 큰 수 중에서 첫번째로 나오는 수 반환
+// BFS에서 가장 먼 정점들은 탐색 깊이가 가장 깊은 노드의 개수이다. 따라서 마지막 깊이의 인접 정점들을 카운팅해서 반환하면된다.
 import java.util.*;
 
 class Solution {
@@ -75,12 +74,11 @@ class Solution {
         q.add(1);
         visited[1] = true;
         while(!q.isEmpty()) {
-            // 큐에 들어간 정점 스냅샷
-            int size = q.size();
+            int size = q.size(); // 특정 깊이의 정점의 개수 스냅샷
             cnt = 0;
-            // 인접 정정 모두 방문
-            while(size-- > 0) {
-                int u = q.remove();
+            // 특정 깊이의 인접 정점 방문
+            while(size-- > 0) { 
+                int u = q.remove(); 
                 cnt++; // 동일 깊이에 있는 인접 정점이므로 정점 큐에 제거될때마다 개수 카운팅 
                 for (int v : adjList[u]) {
                     if (!visited[v]) {
