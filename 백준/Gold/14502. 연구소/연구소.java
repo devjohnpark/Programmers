@@ -4,10 +4,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-
-    // 벽 좌표 저장
+    // 어떤 자료구조를 쓸지도 헷갈렸음
+    // 좌표 int[] { int, int }를 저장하고, 인덱스로 가져올수있어야했다. 따라서 ArrayList를 사용 
     static List<int[]> wall = new ArrayList<>();
     static List<int[]> virus = new ArrayList<>();
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, -1, 0, 1};
     static int n;
     static int m;
 
@@ -27,47 +29,50 @@ public class Main {
             }
         }
 
-        // 바이러스 좌표 저장
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (map[i][j] == 0) {
+                if (map[i][j] == 0) { // 벽 좌표 저장
                     wall.add(new int[]{i, j});
-                } else if (map[i][j] == 2) {
+                } else if (map[i][j] == 2) {  // 바이러스 좌표 저장
                     virus.add(new int[]{i, j});
                 }
             }
         }
 
-        int maxSafyCnt = 0;
+        int maxSafeZoneSize = 0;
 
         // 벽을 3개 세우는 것의 경우의 수에 따른 바이러스 퍼짐 후 안전 영역의 최대 크기 저장
         int wallSize = wall.size();
         for (int i = 0; i < wallSize; i++) {
             for (int j = i + 1; j < wallSize; j++) {
                 for (int k = j + 1; k < wallSize; k++) {
-                    // 벽 세운 곳 && 바이러스 걸릭곳 원상 복귀 필요해서 map 복사
-                    int[][] tmpMap = mapCopy(map, n, m);
+                    // 벽 세운 곳 && 바이러스 걸린 곳의 좌표 값 변경에 대한 원상 복귀 필요해서 map 복사
+                    int[][] tmpMap = mapCopy(map);
+
+                    int[] firstWall = wall.get(i);
+                    int[] secondWall = wall.get(j);
+                    int[] thirdWall = wall.get(k);
 
                     // 3개의 벽 세우기
-                    tmpMap[wall.get(i)[0]][wall.get(i)[1]] = 1;
-                    tmpMap[wall.get(j)[0]][wall.get(j)[1]] = 1;
-                    tmpMap[wall.get(k)[0]][wall.get(k)[1]] = 1;
+                    tmpMap[firstWall[0]][firstWall[1]] = 1;
+                    tmpMap[secondWall[0]][secondWall[1]] = 1;
+                    tmpMap[thirdWall[0]][thirdWall[1]] = 1;
 
                     // 바이러스 전염
                     activeVirus(tmpMap);
 
                     // 안전 영역 카운트
-                    int cntSaftyZone = countSaftyZone(tmpMap);
+                    int safeZoneSize = countSafeZone(tmpMap);
 
                     // 안전 영역 최대값 갱신
-                    maxSafyCnt = Math.max(cntSaftyZone, maxSafyCnt);
+                    maxSafeZoneSize = Math.max(safeZoneSize, maxSafeZoneSize);
                 }
             }
         }
-        System.out.println(maxSafyCnt);
+        System.out.println(maxSafeZoneSize);
     }
 
-    private static int[][] mapCopy(int[][] map, int n, int m) {
+    private static int[][] mapCopy(int[][] map) {
         int[][] newMap = new int[n][m];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -78,14 +83,12 @@ public class Main {
     }
 
     private static void activeVirus(int[][] map) {
-        int[] dx = {-1, 0, 1, 0};
-        int[] dy = {0, -1, 0, 1};
-
         for (int i = 0; i < virus.size(); i++) {
             int[] startPosition = virus.get(i);
             int x = startPosition[0];
             int y = startPosition[1];
 
+//            dfs(map, x, y); // 재귀
             Stack<int[]> stack = new Stack<>();
             stack.push(new int[]{x, y});
             map[x][y] = 2;
@@ -104,11 +107,26 @@ public class Main {
                     }
                 }
             }
-
         }
     }
 
-    private static int countSaftyZone(int[][] map) {
+    private static void dfs(int[][] map, int x, int y) {
+        // 현재 위치를 바이러스로 표시
+        map[x][y] = 2;
+
+        // 4방향 탐색
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            // 범위 체크 및 빈 공간인 경우 재귀 호출
+            if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] == 0) {
+                dfs(map, nx, ny);
+            }
+        }
+    }
+
+    private static int countSafeZone(int[][] map) {
         int cnt = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
