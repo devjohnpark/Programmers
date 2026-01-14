@@ -1,26 +1,22 @@
-// words가 정점
-// words 크기의 방문 배열
-// BFS를 위한 큐를 선언
-// 방문하지 않은 word 중에서 변경된 문자열과 다른 문자의 개수가 1개인 경우이 큐에 적재
-// 변경한 문자열이 target과 동일하면 return depth (bfs는 처음 도착한 지점이 최단거리임: 동일 깊이를 탐색하므로)
-// 큐가 비었을때 bfs 끝나므로 return 0
-
-// bfs에서 인접한 정점들을 모두 적재하고, 해당 정점들이 모두 제거되때까지가지가 현재 높이에 대한 로직이다.
-// 따라서 인접한 정점들을 모두 적재한 뒤 정점의 개수를 캡처하고 큐의 크기가 0이 될때까지 탐색 수행 후에 깊이를 카운팅한다.
-
+// begin에서 targeg으로 변환하는 가장 짧은 변환 과정
+// 무가중치이므로 BFS 사용
+// target 도달시 순회 깊이를 반환
 import java.util.*;
 
 class Solution {
     public int solution(String begin, String target, String[] words) {
-        int answer = 0;
-        boolean[] visited = new boolean[words.length];
-        int[] min = new int[words.length];
+        // 문자 하나 다른것을 확인
+        // 문자 하나 다른 문자열을 큐에 적재
+        // 문자열이 target과 동일하면 순회 깊이 반환
+        // return 0 반환
+        
         Queue<String> q = new LinkedList<>();
+        boolean[] visited = new boolean[words.length]; // words 방문 확인
         q.add(begin);
         int depth = 0;
-        while (!q.isEmpty()) {
+        while(!q.isEmpty()) {
             int size = q.size();
-            while(size-- > 0) {
+            while (size-- > 0) {
                 String cur = q.poll();
                 if (target.equals(cur)) return depth;
                 for (int i = 0; i < words.length; i++) {
@@ -31,14 +27,14 @@ class Solution {
                         }
                         if (cnt == 1) {
                             visited[i] = true;
-                            q.add(words[i]);
+                            q.add(words[i]); // 변경된 단어 삽입
                         }
-                    }
-                }   
+                    }   
+                }
+                
             }
             depth++;
         }
-        
         return 0;
-    }
+    }    
 }
