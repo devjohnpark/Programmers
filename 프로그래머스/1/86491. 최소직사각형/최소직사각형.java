@@ -1,3 +1,4 @@
+// 그리디
 // 가장 큰 길이의 명함들, 가장 작은 길이의 명함들로 나눈다.
 class Solution {
     public int solution(int[][] sizes) {
