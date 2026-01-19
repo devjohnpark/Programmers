@@ -1,6 +1,5 @@
 // n자리수애서 각 자리수의 조합으로 만드는 모든 소수를 판별해서 카운팅
 // 백트래킹으로 숫자의 조합이 만들어질때 마다 소수인지 확인해서 맞다면 카운팅
-
 import java.util.*;
 
 class Solution {
@@ -8,9 +7,7 @@ class Solution {
         HashSet<Integer> hashSet = new HashSet<>();
         boolean[] visited = new boolean[numbers.length()];
         
-        for (int i = 0; i < numbers.length(); i++) {
-           backtracking("", visited, numbers, hashSet);
-        }
+        backtracking("", visited, numbers, hashSet);
         
         return hashSet.size();
     }
@@ -25,7 +22,7 @@ class Solution {
         
         for (int i = 0; i < numbers.length(); i++) {
             if (!visited[i]) {
-                visited[i] = true;
+                visited[i] = true; 
                 backtracking(cur + numbers.charAt(i), visited, numbers, hashSet);
                 visited[i] = false;
             }
