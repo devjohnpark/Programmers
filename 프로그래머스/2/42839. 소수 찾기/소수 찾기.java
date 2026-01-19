@@ -15,7 +15,7 @@ class Solution {
     private void backtracking(String cur, boolean[] visited, String numbers, HashSet<Integer> hashSet) {
         if(cur.length() != 0) {
             int num = toInt(cur);
-            if (isDecimal(num)) {
+            if (isPrime(num)) {
                 hashSet.add(num);
             }
         }
@@ -38,7 +38,7 @@ class Solution {
         return num;
     }
     
-    private boolean isDecimal(int num) {
+    private boolean isPrime(int num) {
         if (num == 0 || num == 1) return false;
         for (int i = 2; i < num - 1; i++) {
             if (num % i == 0) return false;
