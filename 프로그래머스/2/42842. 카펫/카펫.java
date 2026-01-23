@@ -13,37 +13,31 @@ class Solution {
         List<int[]> yellows = new ArrayList<>();
         List<int[]> carpets = new ArrayList<>();
         
-        for (int i = 1; i <= yellow; i++) {
-            if (yellow % i == 0) {
-                int w = yellow / i;
-                int h = i;
+        for (int h = 1; h <= yellow; h++) {
+            if (yellow % h == 0) {
+                int w = yellow / h;
                 yellows.add(new int[] { w, h });
             }
         }
         
         int carpet = brown + yellow;
         
-        for (int i = 1; i <= carpet; i++) {
-            if (carpet % i == 0) {
-                int w = carpet / i;
-                int h = i;
-                if (w >= h) {
-                    carpets.add(new int[] { w, h });
+        for (int h = 3; h <= carpet / h; h++) {
+            if (carpet % h == 0) {
+                int w = carpet / h;
+                if (w >= h) {  // 가로 >= 세로 조건
+                    // yellows 리스트에서 조건 맞는 것 찾기
+                    for (int[] y : yellows) {
+                        int yw = y[0];
+                        int yh = y[1];
+                        
+                        // 노란색의 사각형 가로 세로가 2이상 작아야한다.
+                        if (yw <= w - 2 && yh <= h - 2) {
+                            return new int[] {w, h};
+                        }
+                    }
                 }
             }
-        }
-        
-        for (int[] c: carpets) {
-            int cw = c[0];
-            int ch = c[1];
-            for (int[] y: yellows) {
-                int yw = y[0];
-                int yh = y[1];
-                if (cw >= yw + 2 && ch >= yh + 2) {
-                    return new int[] { cw, ch };
-                }
-            }
-            
         }
         return new int[] {};
     }
