@@ -10,11 +10,11 @@ class Solution {
     }
 
     private void backtrack(StringBuilder sb, String target) {
-        if (found) return; // 이미 찾았으면 더 탐색할 필요 없음
+        // if (found) return; // 이미 찾았으면 더 탐색할 필요 없음
 
         if (sb.toString().equals(target)) {
             answer = order;
-            found = true;
+            // found = true;
             return;
         }
         
