@@ -3,15 +3,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+// 안전 영역을 어떻게 하면 최대 크키로 확보하는 로직은?
+// 브루트 포스: m x n x nmC3 = 62 x 64 x 63 x 62 / 3!(64 -3)! = 64 x 63 x 62 / 6 = 36 x 6 x 10000 = 2160000 x 6 = 10^8 이내 이므로 통과 가능
+// 모든 조합에서 DFS하고 0인 개수 최댓값 갱신
+// 조합 어떻게 결정? 0인 좌표 리스트에 저장 -> 3중 for문으로 i, j, k 각 다음 인덱스로 벽 생성
+// 원복 배열 -> 복사 후 조합 생성 -> 2부터 시작해서 0인 지점만 DFS -> 0칸 개수 세기 ->  최대 값 갱신
+// DFS 시작 어떻게 바이러스 지점을 리스트에 저장 -> 각 요소별로 전파
 public class Main {
-    // 어떤 자료구조를 쓸지도 헷갈렸음
-    // 좌표 int[] { int, int }를 저장하고, 인덱스로 가져올수있어야했다. 따라서 ArrayList를 사용 
-    static List<int[]> wall = new ArrayList<>();
-    static List<int[]> virus = new ArrayList<>();
-    static int[] dx = {-1, 0, 1, 0};
-    static int[] dy = {0, -1, 0, 1};
     static int n;
     static int m;
+    static List<int[]> safes = new ArrayList<>();
+    static List<int[]> virus = new ArrayList<>();
+    static int[] dx = { 1, -1, 0, 0};
+    static int[] dy = { 0, 0, 1, -1};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,61 +25,44 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
 
         int[][] map = new int[n][m];
+        int maxScope = 0;
 
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (map[i][j] == 0) { // 벽 좌표 저장
-                    wall.add(new int[]{i, j});
-                } else if (map[i][j] == 2) {  // 바이러스 좌표 저장
-                    virus.add(new int[]{i, j});
+                int x = Integer.parseInt(st.nextToken());
+                map[i][j] = x;
+                if (x == 0) {
+                    safes.add(new int[] {i, j});
+                } else if (x == 2) {
+                    virus.add(new int[] {i, j});
                 }
             }
         }
 
-        int maxSafeZoneSize = 0;
 
-        // 벽을 3개 세우는 것의 경우의 수에 따른 바이러스 퍼짐 후 안전 영역의 최대 크기 저장
-        int wallSize = wall.size();
-        for (int i = 0; i < wallSize; i++) {
-            for (int j = i + 1; j < wallSize; j++) {
-                for (int k = j + 1; k < wallSize; k++) {
-                    // 벽 세운 곳 && 바이러스 걸린 곳의 좌표 값 변경에 대한 원상 복귀 필요해서 map 복사
-                    int[][] tmpMap = mapCopy(map);
-
-                    int[] firstWall = wall.get(i);
-                    int[] secondWall = wall.get(j);
-                    int[] thirdWall = wall.get(k);
-
-                    // 3개의 벽 세우기
-                    tmpMap[firstWall[0]][firstWall[1]] = 1;
-                    tmpMap[secondWall[0]][secondWall[1]] = 1;
-                    tmpMap[thirdWall[0]][thirdWall[1]] = 1;
-
-                    // 바이러스 전염
-                    activeVirus(tmpMap);
-
-                    // 안전 영역 카운트
-                    int safeZoneSize = countSafeZone(tmpMap);
-
-                    // 안전 영역 최대값 갱신
-                    maxSafeZoneSize = Math.max(safeZoneSize, maxSafeZoneSize);
+        // 벽에서 3개를 선택에서 조합
+        int safeSize = safes.size();
+        for (int i = 0; i < safeSize; i++) {
+            for (int j = i + 1; j < safeSize; j++) {
+                for (int k = j + 1; k < safeSize; k++) {
+                    int[][] comMap = copy(map);
+                    comMap[safes.get(i)[0]][safes.get(i)[1]] = 1;
+                    comMap[safes.get(j)[0]][safes.get(j)[1]] = 1;
+                    comMap[safes.get(k)[0]][safes.get(k)[1]] = 1;
+                    activeVirus(comMap);
+                    maxScope = Math.max(maxScope, countSaftyZone(comMap));
                 }
             }
         }
-        System.out.println(maxSafeZoneSize);
+
+        System.out.println(maxScope);
     }
 
-    private static int[][] mapCopy(int[][] map) {
-        int[][] newMap = new int[n][m];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+    private static int[][] copy(int[][] map) {
+        int[][] newMap = new int[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
                 newMap[i][j] = map[i][j];
             }
         }
@@ -84,52 +71,35 @@ public class Main {
 
     private static void activeVirus(int[][] map) {
         for (int i = 0; i < virus.size(); i++) {
-            int[] startPosition = virus.get(i);
-            int x = startPosition[0];
-            int y = startPosition[1];
-
-//            dfs(map, x, y); // 재귀
-            Stack<int[]> stack = new Stack<>();
-            stack.push(new int[]{x, y});
-            map[x][y] = 2;
-
-            while(!stack.isEmpty()) {
-                int[] cur = stack.pop();
-                int curX = cur[0];
-                int curY = cur[1];
-                for (int j = 0; j < 4; j++) {
-                    int nx = curX + dx[j];
-                    int ny = curY + dy[j];
-
-                    if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] == 0) {
-                        map[nx][ny] = 2;
-                        stack.push(new int[]{nx, ny});
-                    }
-                }
+            int x = virus.get(i)[0];
+            int y = virus.get(i)[1];
+            for (int j = 0; j < dx.length; j++) {
+                int nx = x + dx[j];
+                int ny = y + dy[j];
+                virusDfs(map, nx, ny);
             }
         }
     }
 
-    private static void dfs(int[][] map, int x, int y) {
-        // 현재 위치를 바이러스로 표시
+    private static void virusDfs(int[][] map, int x, int y) {
+        // 벽이나 인덱스 범위 초과시 종료
+        if (x < 0 || x >= map.length || y < 0 || y >= map[0].length || map[x][y] != 0) {
+            return;
+        }
+
         map[x][y] = 2;
 
-        // 4방향 탐색
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < dx.length; i++) {
             int nx = x + dx[i];
             int ny = y + dy[i];
-
-            // 범위 체크 및 빈 공간인 경우 재귀 호출
-            if (nx >= 0 && ny >= 0 && nx < n && ny < m && map[nx][ny] == 0) {
-                dfs(map, nx, ny);
-            }
+            virusDfs(map, nx, ny);
         }
     }
 
-    private static int countSafeZone(int[][] map) {
+    private static int countSaftyZone(int[][] map) {
         int cnt = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] == 0) {
                     cnt++;
                 }
@@ -137,5 +107,5 @@ public class Main {
         }
         return cnt;
     }
-}
 
+}
