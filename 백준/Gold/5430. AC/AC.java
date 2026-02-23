@@ -46,21 +46,17 @@ public class Main {
             if (error) {
                 System.out.println("error");
             } else {
-                System.out.print("[");
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
                 while (deque.size() > 1) {
-                    if (reverse)
-                        System.out.print(deque.pollLast());
-                    else
-                        System.out.print(deque.pollFirst());
-                    System.out.print(",");
+                    sb.append(reverse ? deque.pollLast() : deque.pollFirst());
+                    sb.append(",");
                 }
                 if (!deque.isEmpty()) {
-                    if (reverse)
-                        System.out.print(deque.pollLast());
-                    else
-                        System.out.print(deque.pollFirst());
+                    sb.append(reverse ? deque.pollLast() : deque.pollFirst());
                 }
-                System.out.println("]");
+                sb.append("]");
+                System.out.println(sb.toString());
             }
             t--;
         }
