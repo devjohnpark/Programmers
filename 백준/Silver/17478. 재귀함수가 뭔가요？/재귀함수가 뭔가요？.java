@@ -16,15 +16,11 @@ public class Main {
         System.out.println(result.toString());
     }
 
-    // 깊이을 넘겨서
+    // 먼저 출력 후 깊이에 따라 문자열 생성
+    // 깊이가 N이면 마지막 문자열 생성 후 종료
     private static void recursive(int depth, StringBuilder sb) {
-//        String add = "____".repeat(depth);
+        String add = "____".repeat(depth);
 
-        StringBuilder add = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            add.append("____");
-        }
-        
         sb.append(add).append("\"재귀함수가 뭔가요?\"\n");
 
         if (depth == N) {
