@@ -7,11 +7,14 @@ import java.util.Queue;
 import java.util.Stack;
 
 // stack, queue 사용
-// <> 태그는 문자열을 뒤집으면 안된다.
-// 기본 문자는 스택에 넣고 <, 공백, 입력 문자열 끝에 도달하면 출력한다.
-// <가 나오면 >가 나올때까지 큐에 넣는다.
+// 기본 문자는 거꾸로 출력해야한다. -> 스택 사용
+// <> 태그는 문자열을 뒤집으면 안된다. -> 큐 사용
+// 기본 문자는 스택에 넣고 </공백/입력된 문자열 끝에 도달하면 출력한다. (큐 비어있을때)
+// <가 나오면 >가 나올때까지 <> 포함 큐에 넣는다.
+// >에 도달하면 큐에 있는 모든 값을 출력한다.
 
 public class Main {
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
