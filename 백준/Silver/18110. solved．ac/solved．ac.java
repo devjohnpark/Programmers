@@ -32,7 +32,8 @@ public class Main {
             sum += levels[i];
         }
         int people = N - 2 * delete_15p;
-        int avg = (int) (sum * 1.0 / people + 0.5); // 나누는 숫자를 double로 치환 혹은 곱하기 1.0
+        // 정수끼리 나눗셈하면 정수가 나온다. -> 나누는 숫자를 double로 치환 혹은 곱하기 1.0
+        int avg = (int) (sum * 1.0 / people + 0.5);
         System.out.println(avg);
     }
 }
