@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 // 1. 서로 다른 색의 인접칸 요소 바꿔치기 (롤백 필요: 매개 변수 복사 배열)
-// 2. 모든 행/열 중에서 가장 긴 것 찾아서 개수 반환
+// 2. 모든 행/열 중에서 가장 긴 연속된 요소의 개수 찾는다.
 
 public class Main {
     static int[] dx = { 1, -1, 0 , 0};
