@@ -35,26 +35,26 @@ public class Main {
                         tmpMap[x][y] = tmpMap[nx][ny];
                         tmpMap[nx][ny] = color;
 
-                        int cnt;
+                        int cnt = 1;
 
-                        // 모든 같은 색의 행 중에서 가장 큰 긴값
+                        // 행중에서 연속된 컬러의 가장 큰 긴값
                         for (int i = 0; i < N; i++) {
-                            cnt = 1;
-                            for (int j = 1; j < N; j++) {
-                                if (tmpMap[i][j] == tmpMap[i][j - 1]) {
-                                    cnt++;
-                                } else {
-                                    cnt = 1;
-                                }
-                                max = Math.max(max, cnt);
-                            }
+                             cnt = 1;
+                             for (int j = 0; j < N - 1; j++) {
+                                 if (tmpMap[i][j] == tmpMap[i][j+1]) {
+                                     cnt++;
+                                 } else {
+                                     cnt = 1;
+                                 }
+                                 max = Math.max(max, cnt);
+                             }
                         }
 
-                        // 모든 같은 색의 열 중에서 가장 큰 긴값
+                        // 열 중에서 연속된 컬러의 가장 큰 긴값
                         for (int j = 0; j < N; j++) {
                             cnt = 1;
-                            for (int i = 1; i < N; i++) {
-                                if (tmpMap[i][j] == tmpMap[i - 1][j]) {
+                            for (int i = 0; i < N - 1; i++) {
+                                if (tmpMap[i][j] == tmpMap[i+1][j]) {
                                     cnt++;
                                 } else {
                                     cnt = 1;
