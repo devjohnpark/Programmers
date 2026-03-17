@@ -26,14 +26,13 @@ public class Main {
         for (int x = 0; x < N; x++) {
             for (int y = 0; y < N; y++) {
                 for (int k = 0; k < 4; k++) {
-                    char[][] tmpMap = copyMap(map);
                     int nx = x + dx[k];
                     int ny = y + dy[k];
-                    if (nx >= 0 && ny >= 0 && nx < N && ny < N && tmpMap[x][y] != tmpMap[nx][ny]) {
+                    if (nx >= 0 && ny >= 0 && nx < N && ny < N && map[x][y] != map[nx][ny]) {
                         // 인접한 두 칸 바꿔치기
-                        char color = tmpMap[x][y];
-                        tmpMap[x][y] = tmpMap[nx][ny];
-                        tmpMap[nx][ny] = color;
+                        char color = map[x][y];
+                        map[x][y] = map[nx][ny];
+                        map[nx][ny] = color;
 
                         int cnt = 1;
 
@@ -41,7 +40,7 @@ public class Main {
                         for (int i = 0; i < N; i++) {
                              cnt = 1;
                              for (int j = 0; j < N - 1; j++) {
-                                 if (tmpMap[i][j] == tmpMap[i][j+1]) {
+                                 if (map[i][j] == map[i][j+1]) {
                                      cnt++;
                                  } else {
                                      cnt = 1;
@@ -54,7 +53,7 @@ public class Main {
                         for (int j = 0; j < N; j++) {
                             cnt = 1;
                             for (int i = 0; i < N - 1; i++) {
-                                if (tmpMap[i][j] == tmpMap[i+1][j]) {
+                                if (map[i][j] == map[i+1][j]) {
                                     cnt++;
                                 } else {
                                     cnt = 1;
@@ -62,21 +61,15 @@ public class Main {
                                 max = Math.max(max, cnt);
                             }
                         }
+
+                        color = map[x][y];
+                        map[x][y] = map[nx][ny];
+                        map[nx][ny] = color;
                     }
                 }
             }
         }
         System.out.println(max);
-    }
-
-    public static char[][] copyMap (char[][] map) {
-        char[][] newMap = new char[map.length][map[0].length];
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                newMap[i][j] = map[i][j];
-            }
-        }
-        return newMap;
     }
 }
 
