@@ -33,15 +33,18 @@ public class Main {
             }
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < m2; j++) {
                 int sum = 0;
                 for (int k = 0; k < m1; k++) {
                     sum += matrix1[i][k] * matrix2[k][j];
                 }
-                System.out.print(sum + " ");
+                sb.append(sum).append(" ");
             }
-            System.out.println();
+            sb.append("\n");
         }
+
+        System.out.println(sb.toString());
     }
 }
