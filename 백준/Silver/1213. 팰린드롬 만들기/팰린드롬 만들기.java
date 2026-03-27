@@ -1,69 +1,58 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 
-// 순방향으로 읽었을 때와 역방향으로 읽었을 때 같은 문자열 만들기
-// 사전순으로 앞서는 것을 출력
+// 홀수 개수인 알파벳이 하나를 초과하면 팰린드롬 생성이 불가
+// 사전순으로 알파벳 왼쪽 절반 문자 저장
+// 중간의 홀수 알파벳의 값 저장
+// 알파멧 왼쪽 + 홀수 알파벳이 있는 경우, 해당 알파벳 + 알파벳 왼쪽 절반 반대 (reverse)
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str = br.readLine();
-        int[] alphabet = new int['Z' - 'A' + 1];
+        int[] freqAlphabet = new int['Z' - 'A' + 1];
 
         for (int i = 0; i < str.length(); i++) {
-            alphabet[str.charAt(i) - 'A']++;
+            freqAlphabet[str.charAt(i) - 'A']++;
         }
 
+        // 홀수 개수인 문자가 1개 초과하면 불가능
         int oddCnt = 0;
-        for (int i = 0; i < alphabet.length; i++) {
-            if (alphabet[i] % 2 == 1) {
+        char midChar = 0;
+        for (int i = 0; i < freqAlphabet.length; i++) {
+            if (freqAlphabet[i] % 2 == 1) {
                 oddCnt++;
+                midChar = (char) ('A' + i); // 홀수 알파벳 저장
             }
         }
-
         if (oddCnt > 1) {
             System.out.println("I'm Sorry Hansoo");
             return;
         }
 
-        Stack<Character> stack = new Stack<>();
-
-
-
-        // 알파벳 순회
-        for (int i = 0; i < alphabet.length; i++) {
-            // 알파벳 개수 반 출력 및 입력
-            int n = alphabet[i] / 2;
-            if (alphabet[i] % 2 == 1) {
-                alphabet[i] = 1;
-            } else {
-                alphabet[i] = 0;
-            }
+        StringBuilder left = new StringBuilder();
+        
+        // 알파벳 왼쪽 절반 문자 저장
+        for (int i = 0; i < freqAlphabet.length; i++) {
+            int n = freqAlphabet[i] / 2;
             char c = (char) ('A' + i);
             for (int j = 0; j < n; j++) {
-                System.out.print(c);
-                stack.push(c);
+                left.append(c);
             }
         }
 
-        for (int i = 0; i < alphabet.length; i++) {
-            if (alphabet[i] == 1) {
-                char c = (char) ('A' + i);
-                System.out.print(c);
-            }
+        StringBuilder result = new StringBuilder();
+        
+        // 알파벳 왼쪽 절반 
+        result.append(left);
+        
+        // 홀수 알바펫 있으면 중간에 올 값 저장
+        if (oddCnt != 0) {
+            result.append(midChar);
         }
-
-
-        while (!stack.isEmpty()) {
-            System.out.print(stack.pop());
-        }
-
-
+        
+        // 알파벳 왼쪽 절반 반대 (reverse)
+        result.append(left.reverse());
+        System.out.println(result.toString());
     }
-
-
-
 }
